@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "380907738035",
+    "firebase_url": "https://corona-card.firebaseio.com",
+    "project_id": "corona-card",
+    "storage_bucket": "corona-card.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380907738035:android:35d1efbd93f879991171c6",
+        "android_client_info": {
+          "package_name": "com.corona_card"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380907738035-nio91k4n59169i6mq8408771v0dccqnn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.corona_card",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJUjaYIOTMlLtQ-uszgpulndg5rUEVuN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380907738035-l391j339sa11ka5d20jujjc3727k1tsc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

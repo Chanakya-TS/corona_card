@@ -1,11 +1,11 @@
 /* eslint-disable semi */
 /* eslint-disable prettier/prettier */
-import React from "react";
-import { 
+import React from 'react';
+import {
   View,
   Text,
-  StyleSheet
-} from "react-native";
+  StyleSheet,
+} from 'react-native';
 
 import { AuthContext } from './contexts/AuthContext.js'
 
@@ -26,6 +26,8 @@ import Splash from './screens/Splash.js';
 import { useState, useEffect, useMemo } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
+// import { LoginButton, AccessToken } from 'react-native-fbsdk';
+
 
 const Tabs = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -42,7 +44,7 @@ const RootStackScreen = ({ userToken }) => (
       name="App"
       component={DrawerScreen}
       options={{
-        animationEnabled: false
+        animationEnabled: false,
       }}
     />
     ) : (
@@ -50,7 +52,7 @@ const RootStackScreen = ({ userToken }) => (
       name="Auth"
       component={AuthStackScreen}
       options={{
-        animationEnabled: false
+        animationEnabled: false,
       }}
       />
     )}
@@ -59,22 +61,22 @@ const RootStackScreen = ({ userToken }) => (
 
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
-    <AuthStack.Screen 
-      name="SignIn" 
-      component={SignIn} 
-      options={{title: "Sign In"}}
+    <AuthStack.Screen
+      name="SignIn"
+      component={SignIn}
+      options={{title: 'Sign In'}}
     />
-    <AuthStack.Screen 
-      name="CreateAccount" 
-      component={CreateAccount} 
-      options={{title: "Create Account"}}
+    <AuthStack.Screen
+      name="CreateAccount"
+      component={CreateAccount}
+      options={{title: 'Create Account'}}
     />
   </AuthStack.Navigator>
 )
 
 const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Home">
-    <Drawer.Screen 
+    <Drawer.Screen
       name="Home"
       component={TabsScreen}
     />
@@ -87,15 +89,15 @@ const DrawerScreen = () => (
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
-    <HomeStack.Screen 
+    <HomeStack.Screen
       name="Home"
       component={Home}
     />
-    <HomeStack.Screen 
+    <HomeStack.Screen
       name="Map"
       component={Map}
       options={({ route }) => ({
-        title: route.params.name
+        title: route.params.name,
       })}
     />
   </HomeStack.Navigator>
@@ -103,7 +105,7 @@ const HomeStackScreen = () => (
 
 const SettingsStackScreen = () => (
   <SettingsStack.Navigator>
-    <SettingsStack.Screen 
+    <SettingsStack.Screen
       name="Settings"
       component={Settings}
     />
@@ -112,7 +114,7 @@ const SettingsStackScreen = () => (
 
 const ProfileStackScreen = () => (
   <ProfileStack.Navigator>
-    <ProfileStack.Screen 
+    <ProfileStack.Screen
       name="Profile"
       component={Profile}
     />
@@ -120,19 +122,19 @@ const ProfileStackScreen = () => (
 )
 const TabsScreen = () => (
   <Tabs.Navigator>
-      <Tabs.Screen 
-        name="Home" 
-        component={HomeStackScreen} 
+      <Tabs.Screen
+        name="Home"
+        component={HomeStackScreen}
       />
       <Tabs.Screen
-        name="Profile" 
-        component={ProfileStackScreen} 
+        name="Profile"
+        component={ProfileStackScreen}
       />
     </Tabs.Navigator>
 );
 
 const App = (props) => {
-  // to simulate loading and logging in 
+  // to simulate loading and logging in
   // const [isLoading, setIsLoading] = React.useState(true);
   // const [userToken, setUserToken] = React.useState(null);
 
@@ -162,7 +164,7 @@ const App = (props) => {
   // if (isLoading){
   //   return <Splash />
   // }
-  
+
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(null);
 
@@ -184,11 +186,11 @@ const App = (props) => {
         auth()
           .signInAnonymously()
           .then(() => {
-            console.log("Anonymous user has signed in")
+            console.log('Anonymous user has signed in')
           })
           .catch( error => {
             if (error.code === 'auth/operation-not-allowed') {
-              console.log("Enable anonymous in your firebase console")
+              console.log('Enable anonymous in your firebase console')
             }
             console.error(error);
           })
@@ -198,7 +200,7 @@ const App = (props) => {
         auth()
           .createUserWithEmailAndPassword('chanakyats@gmail.com', '123456')
           .then(() => {
-            console.log("User account was created and signed in!")
+            console.log('User account was created and signed in!')
           })
           .catch(( error ) => {
             if (error.code === 'auth/invalid-email'){
@@ -216,11 +218,11 @@ const App = (props) => {
         auth()
           .signInWithEmailAndPassword('chanakyats@gmail.com', '123456')
           .then(() => {
-            console.log("User account was created and signed in!")
+            console.log('User account was created and signed in!')
           })
           .catch(( error ) => {
             if (error.code === 'auth/invalid-email'){
-              console.log("That email address is invalid ")
+              console.log('That email address is invalid ')
             }
             if (error.code === 'auth/email-already-in-use') {
               console.log('That email is already in use')
@@ -229,18 +231,33 @@ const App = (props) => {
           })
       },
 
-      signOut: () => {
+      // signInWithFacebook: async () => {
+      //   const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      //   if (result.isCancelled) {
+      //     throw 'User cancelled the login process';
+      //   }
+      //   const data = await AccessToken.getCurrentAccessToken();
+      //   if (!data) {
+      //     throw 'Something went wrong obtaining access token';
+      //   }
+      //   const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+      //   return auth().signInWithCredential(facebookCredential).catch((error) => {
+      //     console.log(error);
+      //   });
+      // },
+
+      signOutAcc: () => {
         auth()
           .signOut()
-          .then(() => console.log("User signed out!"));
-      }
+          .then(() => console.log('User signed out!'));
+      },
       }
   })
 
   function onAuthStateChanged(user){
     setUser(user);
-    if (initializing) setInitializing(false);
-  };
+    if (initializing) {setInitializing(false);}
+  }
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -248,10 +265,9 @@ const App = (props) => {
     });
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
     return subscriber;
-  }, [])
-  
-  if (initializing) return <Splash />;
+  }, [onAuthStateChanged]);
 
+  if (initializing) {return <Splash />;}
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
@@ -266,6 +282,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });

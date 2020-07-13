@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable semi */
 /* eslint-disable prettier/prettier */
 import React from 'react';
@@ -7,7 +9,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { AuthContext } from './contexts/AuthContext.js'
+import { AuthContext } from './contexts/AuthContext.js';
+import { RegionsContext } from './contexts/RegionsContext.js';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -28,6 +31,9 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
 // import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
+import firestore from '@react-native-firebase/firestore';
+
+import Radar from 'react-native-radar';
 
 const Tabs = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -165,7 +171,8 @@ const App = (props) => {
   //   return <Splash />
   // }
 
-  const [initializing, setInitializing] = useState(true);
+  const [initializingUser, setInitializingUser] = useState(true);
+  const [initializingRZ, setInitializingRZ] = useState(true);
   const [user, setUser] = useState(null);
 
   const authContext = useMemo(() => {
@@ -256,7 +263,7 @@ const App = (props) => {
 
   function onAuthStateChanged(user){
     setUser(user);
-    if (initializing) {setInitializing(false);}
+    if (initializingUser) {setInitializingUser(false);}
   }
 
   useEffect(() => {
@@ -267,13 +274,42 @@ const App = (props) => {
     return subscriber;
   }, [onAuthStateChanged]);
 
-  if (initializing) {return <Splash />;}
+  const [regionsContext, setRegionsContext] = useState(null);
+
+  async function getRegions(){
+    const regionsContext = await firestore()
+                                .collection('regions')
+                                .get();
+    setRegionsContext(regionsContext);
+    if (initializingRZ) {setInitializingRZ(false)}
+  }
+
+  useEffect(() => {
+    getRegions();
+  }, [])
+
+  useEffect(() => {
+    Radar.getPermissionsStatus().then((status) => {
+      if (status !== 'GRANTED_BACKGROUND') {
+        Radar.requestPermissions(true);
+      }
+    });
+  }, [])
+
+  // const RegionsContext = {
+
+  // }
+
+  if (initializingUser) {return <Splash text="Loading User"/>;}
+  if (initializingRZ) {return <Splash text="Loading Red Zones" />;}
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <RootStackScreen userToken={user}/>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <RegionsContext.Provider valuse={regionsContext}>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer>
+          <RootStackScreen userToken={user}/>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </RegionsContext.Provider>
   )
 }
 export default App;

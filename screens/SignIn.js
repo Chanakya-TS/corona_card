@@ -1,8 +1,7 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-
-import {LoginButton, AccessToken} from 'react-native-fbsdk';
-
+// import {LoginButton, AccessToken} from 'react-native-fbsdk';
 import {AuthContext} from '../contexts/AuthContext';
 
 const SignIn = ({navigation}) => {
@@ -10,7 +9,7 @@ const SignIn = ({navigation}) => {
     signInAnonymous,
     signInWithEmail,
     signInWithGmail,
-    signInWithFacebook,
+    // signInWithFacebook,
   } = React.useContext(AuthContext);
   return (
     <View style={styles.container}>
@@ -25,7 +24,7 @@ const SignIn = ({navigation}) => {
         title="Sign in With Facebook"
         onPress={() => signInWithFacebook()}
       /> */}
-      <LoginButton
+      {/* <LoginButton
         onLoginFinished={(error, result) => {
           if (error) {
             console.log('Login has error: ' + result.error);
@@ -38,7 +37,7 @@ const SignIn = ({navigation}) => {
           }
         }}
         onLogoutFinished={() => console.log('user logged out')}
-      />
+      /> */}
       <Button
         title="Create Account"
         onPress={() => navigation.push('CreateAccount')}
@@ -47,7 +46,6 @@ const SignIn = ({navigation}) => {
   );
 };
 export default SignIn;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

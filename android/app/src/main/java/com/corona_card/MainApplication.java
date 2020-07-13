@@ -1,5 +1,6 @@
 package com.corona_card;
 
+import io.radar.sdk.Radar;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -49,6 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Radar.initialize(this, "prj_test_pk_4f97599ce2c776bf40b26b738b005215e2e567a4");
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }

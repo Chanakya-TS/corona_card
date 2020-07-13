@@ -5,7 +5,11 @@ import MapView, {Marker} from 'react-native-maps';
 
 import Geolocation from '@react-native-community/geolocation';
 
-  const Map = ({route}) => {
+import DisplayRZ from '../component/DisplayRZ';
+
+import Radar from 'react-native-radar';
+
+  const Map = () => {
   const [error, setError] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [mapRegion, setMapRegion] = useState({
@@ -16,52 +20,42 @@ import Geolocation from '@react-native-community/geolocation';
   });
 
   function updateLocationAndRegion() {
-    Geolocation.getCurrentPosition(({coords}) => {
-      setUserLocation({
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-      });
+    Radar.getLocation().then(({location}) => {
+      setUserLocation(location);
       setMapRegion({
-        latitude: coords.latitude,
-        longitude: coords.longitude,
+        latitude: location.latitude,
+        longitude: location.longitude,
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
-      });
+      })
+    }).catch((err) => {
+      console.log(err);
+      setError(true);
     });
   }
 
   useEffect(() => {
-    try {
       updateLocationAndRegion();
-    } catch {
-      setError(true);
-    }
   }, []);
 
-  // useEffect( () => {
-  //   Geolocation.getCurrentPosition(({ coords }) => {
-  //     setUserLocation({
-  //       latitude: coords.latitude,
-  //       longitude: coords.longitude,
-  //     });
-  //     setMapRegion({
-  //       latitude: coords.latitude,
-  //       longitude: coords.longitude,
-  //       latitudeDelta: 0.04,
-  //       longitudeDelta: 0.04,
-  //     });
-  //   });
-  // });
-  // Geolocation.getCurrentPosition(({coords}) => setUserLocation(coords));
   if (!error) {
     if (userLocation) {
       return (
       <MapView style={styles.map} region={mapRegion}> 
-      <Marker 
-        coordinate={userLocation}
+      <Marker
+        coordinate={
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          }
+        }
         title="Your Location"
       />
+      <DisplayRZ/>
       </MapView>
+      // <View>
+      //   <Text>{JSON.stringify(userLocation)}</Text>
+      // </View>
       );
     } else {
       return (
@@ -74,6 +68,9 @@ import Geolocation from '@react-native-community/geolocation';
             longitudeDelta: 0.005,
           }}
          />
+      // {/* <View>
+      //   <Text>LOADING</Text>
+      // </View> */}
       );
     }
   } else {
@@ -83,19 +80,6 @@ import Geolocation from '@react-native-community/geolocation';
       </View>
     );
   }
-  // if (userLocation) {
-  //   return (
-  //     <View>
-  //       <Text>{JSON.stringify(mapRegion)}</Text>
-  //     </View>
-  //   );
-  // } else {
-  //   return (
-  //     <View>
-  //       <Text>loading</Text>
-  //     </View>
-  //   );
-  // }
 };
 export default Map;
 

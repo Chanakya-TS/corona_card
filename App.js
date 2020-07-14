@@ -35,6 +35,8 @@ import firestore from '@react-native-firebase/firestore';
 
 import Radar from 'react-native-radar';
 
+import {LocalNotification} from './android/app/src/services/LocalPushController.js';
+
 const Tabs = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -355,6 +357,18 @@ const App = (props) => {
     return ans;
   }
 
+  useEffect(() => {
+    if (danger) {
+    LocalNotification('You are in a red zone, be careful!', 'Corona-Card Alert', 'Danger: You Are In A Red Zone', 'YOU ARE IN A RED ZONE')
+    }
+  }, [danger])
+
+  useEffect(() => {
+    if (warning) {
+      LocalNotification('You are near a red zone, be careful!', 'Corona-Card Alert', 'Warning: You Are Near A Red Zone', 'YOU ARE NEAR A RED ZONE')
+    }
+  }, [warning])
+
   if (initializingUser) {return <Splash text="Loading User"/>;}
   if (!flag) {
     timeID = setInterval( () => {
@@ -375,11 +389,12 @@ const App = (props) => {
                   setDanger(true);
                   setSafe(false);
                   setWarning(false);
-                } else {
+                } else if (distance > result.radius){
                   console.log('Near red zone: Warning')
                   setWarning(true);
                   setSafe(false);
-                  setDanger(true);
+                  setDanger(false);
+                  // LocalNotification('You are near a red zone, be careful!', 'Corona-Card Alert', 'Warning: You Are Near A Red Zone', 'YOU ARE NEAR A RED ZONE')
                 }
               });
             })
@@ -395,6 +410,7 @@ const App = (props) => {
     }, 5000);
     flag = true;
   }
+
   return (
       <AuthContext.Provider value={authContext}>
         <StateContext.Provider value={{warning: warning,safe: safe, danger: danger}}>

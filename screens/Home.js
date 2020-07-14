@@ -2,6 +2,8 @@ import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import { StateContext } from '../contexts/StateContext';
 
+import {LocalNotification} from '../android/app/src/services/LocalPushController.js';
+
 const Home = ({navigation}) => {
   const {safe, warning, danger} = useContext(StateContext);
   console.log('FROM HOME', safe, warning, danger);
@@ -17,6 +19,7 @@ const Home = ({navigation}) => {
           navigation.push('Map', {name: 'User Location and Red Zones Map'})
         }
       />
+      <Button title='NOTIFY' onPress={()=>LocalNotification()}/>
       <Button title="Open Drawer" onPress={() => navigation.toggleDrawer()} />
     </View>
   );

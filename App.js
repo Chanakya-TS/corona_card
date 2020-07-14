@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { AuthContext } from './contexts/AuthContext.js';
-import { RegionsContext } from './contexts/RegionsContext.js';
+import {StateContext} from './contexts/StateContext.js';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -43,7 +43,10 @@ const SettingsStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
 
-const RootStackScreen = ({ userToken }) => (
+const RootStackScreen = ({ userToken }) => {
+  console.log(userToken.uid);
+  Radar.setUserId(userToken.uid);
+  return (
   <RootStack.Navigator headerMode="none">
     {userToken ? (
       <RootStack.Screen
@@ -63,7 +66,8 @@ const RootStackScreen = ({ userToken }) => (
       />
     )}
   </RootStack.Navigator>
-)
+  )
+}
 
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
@@ -139,6 +143,8 @@ const TabsScreen = () => (
     </Tabs.Navigator>
 );
 
+let timeID = null;
+let flag = false;
 const App = (props) => {
   // to simulate loading and logging in
   // const [isLoading, setIsLoading] = React.useState(true);
@@ -172,8 +178,10 @@ const App = (props) => {
   // }
 
   const [initializingUser, setInitializingUser] = useState(true);
-  const [initializingRZ, setInitializingRZ] = useState(true);
   const [user, setUser] = useState(null);
+  const [danger, setDanger] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const [safe, setSafe] = useState(true);
 
   const authContext = useMemo(() => {
     return {
@@ -186,7 +194,9 @@ const App = (props) => {
       signInWithGmail: async () => {
         const { idToken, accessToken  } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken, accessToken);
-        return auth().signInWithCredential(googleCredential).then((userInfo) => {console.log(userInfo)}).cath;
+        return auth().signInWithCredential(googleCredential).then((userInfo) =>{
+          console.log(userInfo)
+        }).catch;
       },
 
       signInAnonymous: () => {
@@ -254,6 +264,11 @@ const App = (props) => {
       // },
 
       signOutAcc: () => {
+        clearInterval(timeID);
+        console.log('Stopped warning')
+        Radar.stopTracking();
+        console.log('Stopped tracking');
+        setUser(null);
         auth()
           .signOut()
           .then(() => console.log('User signed out!'));
@@ -263,6 +278,11 @@ const App = (props) => {
 
   function onAuthStateChanged(user){
     setUser(user);
+    if (user) {
+      Radar.startTrackingResponsive();
+      console.log('Started Tracking');
+      console.log(user);
+    }
     if (initializingUser) {setInitializingUser(false);}
   }
 
@@ -274,20 +294,6 @@ const App = (props) => {
     return subscriber;
   }, [onAuthStateChanged]);
 
-  const [regionsContext, setRegionsContext] = useState(null);
-
-  async function getRegions(){
-    const regionsContext = await firestore()
-                                .collection('regions')
-                                .get();
-    setRegionsContext(regionsContext);
-    if (initializingRZ) {setInitializingRZ(false)}
-  }
-
-  useEffect(() => {
-    getRegions();
-  }, [])
-
   useEffect(() => {
     Radar.getPermissionsStatus().then((status) => {
       if (status !== 'GRANTED_BACKGROUND') {
@@ -296,20 +302,107 @@ const App = (props) => {
     });
   }, [])
 
-  // const RegionsContext = {
+  // Radar.on('location', (result) => {
+  //   console.log('location', result.user);
+  // });
 
-  // }
+  let clientLocation = null;
+
+  Radar.on('clientLocation', (result) => {
+    // console.log('EVENTS', result.location);
+    clientLocation = {
+      latitude: result.location.latitude,
+      longitude: result.location.longitude,
+    }
+  });
+
+  async function getLatLongRad(externalId) {
+    let LatLongRad;
+    await firestore()
+      .collection('regions')
+      .doc(externalId)
+      .get()
+      .then((documentSnapshot) => {
+        console.log('from firestore: ', documentSnapshot.data());
+        LatLongRad = documentSnapshot.data();
+        console.log('data; ', LatLongRad);
+      })
+      return LatLongRad;
+  }
+
+  function calculateDistance(clLat, clLong, rzLat, rzLong){
+    console.log('CL: ', clLat, clLong);
+    console.log('RZ', rzLat, rzLong);
+    function toRadians(degree) {
+      let one_deg = (Math.PI) / 180;
+      return (one_deg * degree);
+    }
+
+    clLat = toRadians(clLat);
+    clLong = toRadians(clLong);
+    rzLat = toRadians(rzLat);
+    rzLong = toRadians(rzLong);
+
+    let dLong = rzLong - clLong;
+    let dLat = rzLat - clLat;
+
+    let ans = Math.pow( Math.sin(dLat / 2), 2) + Math.cos(clLat) * Math.cos(rzLat) * Math.pow( Math.sin(dLong / 2), 2);
+
+    ans = 2 * Math.asin(Math.sqrt(ans));
+    let R = 6371;
+    ans = ans * R;
+    ans = ans * 1000;
+    return ans;
+  }
 
   if (initializingUser) {return <Splash text="Loading User"/>;}
-  if (initializingRZ) {return <Splash text="Loading Red Zones" />;}
+  if (!flag) {
+    timeID = setInterval( () => {
+      Radar.searchGeofences({
+        radius: 500,
+        tags: ['RedZone'],
+        limit: 10,
+      }).then((result) => {
+        // do something with result.geofences
+        if (Object.keys(result.geofences).length > 0) {
+            result.geofences.forEach(async (region) => {
+              await getLatLongRad(region.externalId).then((result) => {
+                console.log(result);
+                let distance = calculateDistance(clientLocation.latitude, clientLocation.longitude, result.lat, result.long);
+                console.log('Distance:', distance);
+                if (distance < result.radius) {
+                  console.log('In the Red zone: DANGER')
+                  setDanger(true);
+                  setSafe(false);
+                  setWarning(false);
+                } else {
+                  console.log('Near red zone: Warning')
+                  setWarning(true);
+                  setSafe(false);
+                  setDanger(true);
+                }
+              });
+            })
+        } else {
+            console.log('Not near red zone: Safe')
+            setSafe(true);
+            setWarning(false);
+            setDanger(false);
+        }
+      }).catch((err) => {
+        console.log('ERROR SEACRH GEOFENCE: ', err);
+      });
+    }, 5000);
+    flag = true;
+  }
   return (
-    <RegionsContext.Provider valuse={regionsContext}>
       <AuthContext.Provider value={authContext}>
-        <NavigationContainer>
-          <RootStackScreen userToken={user}/>
-        </NavigationContainer>
+        <StateContext.Provider value={{warning: warning,safe: safe, danger: danger}}>
+          <NavigationContainer>
+            <RootStackScreen userToken={user}/>
+          </NavigationContainer>
+        </StateContext.Provider>
       </AuthContext.Provider>
-    </RegionsContext.Provider>
   )
 }
 export default App;

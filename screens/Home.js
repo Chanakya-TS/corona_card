@@ -1,10 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
+import { StateContext } from '../contexts/StateContext';
 
 const Home = ({navigation}) => {
+  const {safe, warning, danger} = useContext(StateContext);
+  console.log('FROM HOME', safe, warning, danger);
   return (
     <View style={styles.container}>
       <Text>Home</Text>
+      <Text>
+        Safe: {JSON.stringify(safe)}, Warning: {JSON.stringify(warning)}, Danger: {JSON.stringify(danger)}
+      </Text>
       <Button
         title="Map"
         onPress={() =>

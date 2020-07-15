@@ -1,4 +1,4 @@
-// Import core react elements
+// Import React core components
 import React from 'react';
 import {
   StyleSheet,
@@ -59,6 +59,7 @@ const App = () => {
           if (userInfo.additionalUserInfo.isNewUser) {
             console.log("User is new!")
             setIsNewUser(true);
+            flag = false;
           }
         });
       },
@@ -177,7 +178,6 @@ const App = () => {
         
         console.log('RZ TIME:', rzTime);
         clearInterval(rzTimeID);
-        console.log(user.uid);
         firestore()
         .collection('Users')
         .doc(user.uid)
@@ -219,51 +219,48 @@ const App = () => {
   // Displays "Loading user" Splash screen
   if (initializingUser) {return <Splash text="Loading User"/>;}
   if (!flag) {
-    console.log('STARTING SEARCH TIMER')
-    timeID = setInterval(() => {
-    // Searches for Geofences when client location changes
-    console.log('Searching for Geofences')
-    Radar.searchGeofences({
-      radius: 500,
-      tags: ['RedZone'],
-      limit: 10,
-    }).then((result) => {
-      if (Object.keys(result.geofences).length > 0) {
-
-          result.geofences.forEach(async (region) => {
-
-            await getLatLongRad(region.externalId).then((result) => {
-
-              let distance = calculateDistance(clientLocation.latitude, clientLocation.longitude, result.lat, result.long);
-              console.log('Distance:', distance);
-              console.log('--------------------------------')
-
-              // Checks if user is in the radius
-              if (distance < result.radius) {
-
-                console.log('In the Red zone: DANGER')
-                setDanger(true);
-                setSafe(false);
-                setWarning(false);
-
-              // If user is not in the radius
-              } else if (distance > result.radius) {
-
-                console.log('Near red zone: Warning')
-                setWarning(true);
-                setSafe(false);
-                setDanger(false);
-
-              }
-            });
-          })
-
-      } else {
-
-          console.log('Not near red zone: Safe')
-          setSafe(true);
-          setWarning(false);
-          setDanger(false);
+    timeID = setInterval( () => {
+      Radar.searchGeofences({
+        radius: 500,
+        tags: ['RedZone'],
+        limit: 10,
+      }).then((result) => {
+        if (Object.keys(result.geofences).length > 0) {
+            result.geofences.forEach(async (region) => {
+              await getLatLongRad(region.externalId).then((result) => {
+                let distance = calculateDistance(clientLocation.latitude, clientLocation.longitude, result.lat, result.long);
+                console.log('Distance:', distance);
+                if (distance < result.radius) {
+                  console.log('In the Red zone: DANGER')
+                  console.log('-------------------------------')
+                  console.log()
+                  setDanger(true);
+                  setSafe(false);
+                  setWarning(false);
+                } else if (distance > result.radius){
+                  console.log('Near red zone: Warning')
+                  console.log('-------------------------------')
+                  console.log()
+                  setWarning(true);
+                  setSafe(false);
+                  setDanger(false);
+                }
+              });
+            })
+        } else {
+            console.log('Not near red zone: Safe')
+            console.log('-------------------------------')
+            console.log()
+            setSafe(true);
+            setWarning(false);
+            setDanger(false);
+        }
+      }).catch((err) => {
+        console.log('ERROR SEACRH GEOFENCE: ', err);
+      });
+    }, 5000);
+    flag = true;
+  }
 
       }
     }).catch((err) => {

@@ -2,16 +2,16 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-// Import MapView to display Map
+// Import for Map
 import MapView, {Marker} from 'react-native-maps';
 
-// Import Firestore to get data about regions
+// Import to access region data
 import firestore from '@react-native-firebase/firestore';
 
-// Import Component to display red zones
+// Import to display red zones
 import DisplayRZ from '../component/DisplayRZ';
 
-// Import Radar to get use location
+// Import to get user location
 import Radar from 'react-native-radar';
 
 // Declare universal variables

@@ -2,11 +2,13 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 
-// Import context for Firebase Auth
+// Import Auth context
 import {AuthContext} from '../contexts/AuthContext';
 
 const SignIn = () => {
-  const { signInWithGmail } = React.useContext(AuthContext);
+  const {
+    signInWithGmail,
+  } = React.useContext(AuthContext);
   return (
     <View style={styles.container}>
       <Text>Sign in Screen</Text>

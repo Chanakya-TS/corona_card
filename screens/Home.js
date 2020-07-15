@@ -1,15 +1,26 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
-import { StateContext } from '../contexts/StateContext';
+// Import React core components
+import React, {useState, useContext} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Modal,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 
-import {LocalNotification} from '../android/app/src/services/LocalPushController.js';
+// Import contexts
+import {StateContext} from '../contexts/StateContext';
+import {UserContext} from '../contexts/UserContext';
+
+import NewUserForm from './NewUserForm';
 
 const Home = ({navigation}) => {
 
   const {safe, warning, danger} = useContext(StateContext);
   const {user, isNewUser} = useContext(UserContext);
   const [modalOpen, setModalOpen] = useState(isNewUser);
-
   return (
     <View style={styles.container}>
       <Modal visible={modalOpen}>
@@ -33,10 +44,7 @@ const Home = ({navigation}) => {
           navigation.push('Map', {name: 'User Location and Red Zones Map'})
         }
       />
-      <Button 
-        title="Open Drawer" 
-        onPress={() => navigation.toggleDrawer()} 
-      />
+      <Button title="Open Drawer" onPress={() => navigation.toggleDrawer()} />
     </View>
   );
 };

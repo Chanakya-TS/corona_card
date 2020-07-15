@@ -2,10 +2,10 @@
 import React from 'react';
 import {Button, TextInput, View, Text, StyleSheet} from 'react-native';
 
-// Import Formik for forms
+//Import Formik for forms
 import {Formik} from 'formik';
 
-// Import Firebase Firestore to add new user
+// Import for add user
 import firestore from '@react-native-firebase/firestore';
 
 export default function NewUserForm({setModalOpen, userUid, userName}) {

@@ -19,6 +19,7 @@ import NewUserForm from './NewUserForm';
 const Home = ({navigation}) => {
   const {safe, warning, danger} = useContext(StateContext);
   const {user, isNewUser} = useContext(UserContext);
+  console.log("FROM HOME isnewuser: ", isNewUser)
   const [modalOpen, setModalOpen] = useState(isNewUser);
   return (
     <View style={styles.container}>

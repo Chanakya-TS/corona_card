@@ -35,7 +35,6 @@ let timeID = null;
 let flag = false;
 let rzTimeID = null;
 let rzTime = 0;
-let startedTracking = false;
 
 const App = () => {
   
@@ -81,10 +80,9 @@ const App = () => {
   // Executes everytime there is change in Authstate
   function onAuthStateChanged(user){
     setUser(user);
-    if (!startedTracking && user) {
+    if (user) {
       Radar.startTrackingResponsive();
       console.log('Started Tracking');
-      startedTracking = true;
     }
     if (initializingUser) {setInitializingUser(false);}
   }
@@ -114,7 +112,6 @@ const App = () => {
       latitude: result.location.latitude,
       longitude: result.location.longitude,
     }
-    console.log('Client location changed')
   });
 
   // Gets center of the RedZone from firestore
@@ -222,8 +219,10 @@ const App = () => {
   // Displays "Loading user" Splash screen
   if (initializingUser) {return <Splash text="Loading User"/>;}
   if (!flag) {
+    console.log('STARTING SEARCH TIMER')
     timeID = setInterval(() => {
     // Searches for Geofences when client location changes
+    console.log('Searching for Geofences')
     Radar.searchGeofences({
       radius: 500,
       tags: ['RedZone'],
@@ -272,7 +271,7 @@ const App = () => {
       console.log('ERROR SEACRH GEOFENCE: ', err);
 
     });
-    }, 5000);
+    }, 10000);
   }
   return (
       <AuthContext.Provider value={authContext}>

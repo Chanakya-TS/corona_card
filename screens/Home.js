@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useContext} from 'react';
+// Import React core components
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -8,17 +9,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {StateContext} from '../contexts/StateContext';
 
-import {LocalNotification} from '../android/app/src/services/LocalPushController.js';
+// Import contexts
+import {StateContext} from '../contexts/StateContext';
 import {UserContext} from '../contexts/UserContext';
+
 import NewUserForm from './NewUserForm';
 
 const Home = ({navigation}) => {
   const {safe, warning, danger} = useContext(StateContext);
   const {user, isNewUser} = useContext(UserContext);
   const [modalOpen, setModalOpen] = useState(isNewUser);
-  console.log('From HOME: is new user:', isNewUser);
   return (
     <View style={styles.container}>
       <Modal visible={modalOpen}>
@@ -29,15 +30,8 @@ const Home = ({navigation}) => {
               userUid={user.uid}
               userName={user.displayName}
             />
-            <Button
-              title="CLOSE"
-              onPress={() => {
-                setModalOpen(false);
-              }}
-            />
           </View>
         </TouchableWithoutFeedback>
-        {/* <View><Text>{JSON.stringify(isNewUser)}</Text></View> */}
       </Modal>
       <Text>Home</Text>
       <Text>
@@ -50,7 +44,6 @@ const Home = ({navigation}) => {
           navigation.push('Map', {name: 'User Location and Red Zones Map'})
         }
       />
-      <Button title="NOTIFY" onPress={() => LocalNotification()} />
       <Button title="Open Drawer" onPress={() => navigation.toggleDrawer()} />
     </View>
   );

@@ -1,6 +1,11 @@
+// Import React core components
 import React from 'react';
 import {Button, TextInput, View, Text, StyleSheet} from 'react-native';
+
+//Import Formik for forms
 import {Formik} from 'formik';
+
+// Import for add user
 import firestore from '@react-native-firebase/firestore';
 
 export default function NewUserForm({setModalOpen, userUid, userName}) {
@@ -24,10 +29,6 @@ export default function NewUserForm({setModalOpen, userUid, userName}) {
   }
   return (
     <View>
-      {/* <Button
-        title="Send info to firebase"
-        onPress={() => sendFirebaseInfo()}
-      /> */}
       <Formik
         initialValues={{
           age: '',

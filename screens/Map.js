@@ -1,12 +1,17 @@
-/* eslint-disable prettier/prettier */
+// Import React core components
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+
+// Import for Map
 import MapView, {Marker} from 'react-native-maps';
 
+// Import to access region data
 import firestore from '@react-native-firebase/firestore';
 
+// Import to display red zones
 import DisplayRZ from '../component/DisplayRZ';
 
+// Import to get user location
 import Radar from 'react-native-radar';
 
 let regions = null;
@@ -46,13 +51,11 @@ let regions = null;
       .collection('regions')
       .get()
       .then(querySnapshot => {
-        console.log('Total regions: ', querySnapshot.size);
         const rz = [];
         querySnapshot.forEach(documentSnapshot => {
           rz.push({...documentSnapshot.data(), id: documentSnapshot.id});
         });
         regions = rz;
-        console.log(regions);
         setGettingRegions(false);
       });
   };
@@ -75,9 +78,6 @@ let regions = null;
         />
         <DisplayRZ regions={regions}/>
         </MapView>
-        // <View>
-        //   <Text>{JSON.stringify(userLocation)}</Text>
-        // </View>
         );
       } else {
         return (
@@ -90,9 +90,6 @@ let regions = null;
               longitudeDelta: 0.005,
             }}
           />
-        // {/* <View>
-        //   <Text>LOADING</Text>
-        // </View> */}
         );
       }
   } else {

@@ -1,7 +1,4 @@
-/* eslint-disable no-shadow */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable semi */
-/* eslint-disable prettier/prettier */
+// Import React core components
 import React from 'react';
 import {
   View,
@@ -9,185 +6,39 @@ import {
   StyleSheet,
 } from 'react-native';
 
+// Import Contexts
 import { AuthContext } from './contexts/AuthContext.js';
 import {StateContext} from './contexts/StateContext.js';
 import {UserContext} from './contexts/UserContext.js';
 
+// Import for navigation
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { RootStackScreen } from './component/Navigation';
 
-import SignIn from './screens/SignIn';
-import CreateAccount from './screens/CreateAccount';
-import Profile from './screens/Profile';
-import Home from './screens/Home.js';
-import Map from './screens/Map.js';
-import About from './screens/About.js';
-import Settings from './screens/Settings.js';
+// Import screens
 import Splash from './screens/Splash.js';
-import NewUser from './screens/NewUser.js';
 
+// Import for Firebase Auth
 import { useState, useEffect, useMemo } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
-// import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
+// Import for Firestore
 import firestore from '@react-native-firebase/firestore';
 
+// Import for geolocation
 import Radar from 'react-native-radar';
 
+// Import for push notification
 import {LocalNotification} from './android/app/src/services/LocalPushController.js';
 
-const Tabs = createBottomTabNavigator();
-const AuthStack = createStackNavigator();
-const HomeStack = createStackNavigator();
-const ProfileStack = createStackNavigator();
-const SettingsStack = createStackNavigator();
-const Drawer = createDrawerNavigator();
-const RootStack = createStackNavigator();
-
-const RootStackScreen = ({ userToken, isNewUser }) => {
-  //console.log(userToken.uid);
-  //console.log(userToken);
-  console.log
-  return (
-  <RootStack.Navigator headerMode="none">
-    {userToken ? (
-      <RootStack.Screen
-      name="App"
-      component={DrawerScreen}
-      options={{
-        animationEnabled: false,
-      }}
-      />
-    ) : (
-    <RootStack.Screen
-      name="Auth"
-      component={AuthStackScreen}
-      options={{
-        animationEnabled: false,
-      }}
-      />
-    )}
-  </RootStack.Navigator>
-  )
-}
-
-const AuthStackScreen = () => (
-  <AuthStack.Navigator>
-    <AuthStack.Screen
-      name="SignIn"
-      component={SignIn}
-      options={{title: 'Sign In'}}
-    />
-    <AuthStack.Screen
-      name="CreateAccount"
-      component={CreateAccount}
-      options={{title: 'Create Account'}}
-    />
-  </AuthStack.Navigator>
-)
-
-const DrawerScreen = () => (
-  <Drawer.Navigator initialRouteName="Home">
-    <Drawer.Screen
-      name="Home"
-      component={TabsScreen}
-    />
-    <Drawer.Screen
-      name="Settings"
-      component={SettingsStackScreen}
-    />
-  </Drawer.Navigator>
-)
-
-const HomeStackScreen = () => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen
-      name="Home"
-      component={Home}
-    />
-    <HomeStack.Screen 
-      name="NewUser"
-      component={NewUser}
-    />
-    <HomeStack.Screen
-      name="Map"
-      component={Map}
-      options={({ route }) => ({
-        title: route.params.name,
-      })}
-    />
-  </HomeStack.Navigator>
-)
-
-const SettingsStackScreen = () => (
-  <SettingsStack.Navigator>
-    <SettingsStack.Screen
-      name="Settings"
-      component={Settings}
-    />
-  </SettingsStack.Navigator>
-)
-
-const ProfileStackScreen = () => (
-  <ProfileStack.Navigator>
-    <ProfileStack.Screen
-      name="Profile"
-      component={Profile}
-    />
-  </ProfileStack.Navigator>
-)
-const TabsScreen = () => (
-  <Tabs.Navigator>
-      <Tabs.Screen
-        name="Home"
-        component={HomeStackScreen}
-      />
-      <Tabs.Screen
-        name="Profile"
-        component={ProfileStackScreen}
-      />
-    </Tabs.Navigator>
-);
 
 let timeID = null;
 let flag = false;
 let rzTimeID = null;
 let rzTime = 0;
-const App = (props) => {
-  // to simulate loading and logging in
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
 
-  // const authContext = React.useMemo(() => {
-  //   return{
-  //     signIn: () => {
-  //       setIsLoading(false);
-  //       setUserToken('123')
-  //     },
-  //     signUp: () => {
-  //       setIsLoading(false);
-  //       setUserToken('123');
-  //     },
-  //     signOut: () => {
-  //       setIsLoading(false);
-  //       setUserToken(null);
-  //     }
-  //   }
-  // }, [])
-
-  // React.useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 1000)
-  // }, []);
-
-  // if (isLoading){
-  //   return <Splash />
-  // }
-
+const App = () => {
   const [initializingUser, setInitializingUser] = useState(true);
   const [user, setUser] = useState(null);
   const [danger, setDanger] = useState(false);
@@ -197,88 +48,19 @@ const App = (props) => {
 
   const authContext = useMemo(() => {
     return {
-      signOut: () => {
-        auth()
-          .signOut()
-          .then(() => console.log('User signed out'))
-      },
 
       signInWithGmail: async () => {
         const { idToken, accessToken  } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken, accessToken);
         return auth().signInWithCredential(googleCredential).then((userInfo) =>{
           console.log('User signed in with Gmail')
-          //console.log(userInfo.additionalUserInfo);
           if (userInfo.additionalUserInfo.isNewUser) {
             console.log("User is new!")
             setIsNewUser(true);
+            flag = false;
           }
         }).catch;
       },
-
-      signInAnonymous: () => {
-        auth()
-          .signInAnonymously()
-          .then(() => {
-            console.log('Anonymous user has signed in')
-          })
-          .catch( error => {
-            if (error.code === 'auth/operation-not-allowed') {
-              console.log('Enable anonymous in your firebase console')
-            }
-            console.error(error);
-          })
-      },
-
-      signUpWithEmail: () => {
-        auth()
-          .createUserWithEmailAndPassword('chanakyats@gmail.com', '123456')
-          .then(() => {
-            console.log('User account was created and signed in!')
-          })
-          .catch(( error ) => {
-            if (error.code === 'auth/invalid-email'){
-              // eslint-disable-next-line quotes
-              console.log("That email address is invalid ")
-            }
-            if (error.code === 'auth/email-already-in-use') {
-              console.log('That email is already in use')
-            }
-            console.log(error);
-          })
-      },
-
-      signInWithEmail: () => {
-        auth()
-          .signInWithEmailAndPassword('chanakyats@gmail.com', '123456')
-          .then(() => {
-            console.log('User account was created and signed in!')
-          })
-          .catch(( error ) => {
-            if (error.code === 'auth/invalid-email'){
-              console.log('That email address is invalid ')
-            }
-            if (error.code === 'auth/email-already-in-use') {
-              console.log('That email is already in use')
-            }
-            console.log(error);
-          })
-      },
-
-      // signInWithFacebook: async () => {
-      //   const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-      //   if (result.isCancelled) {
-      //     throw 'User cancelled the login process';
-      //   }
-      //   const data = await AccessToken.getCurrentAccessToken();
-      //   if (!data) {
-      //     throw 'Something went wrong obtaining access token';
-      //   }
-      //   const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-      //   return auth().signInWithCredential(facebookCredential).catch((error) => {
-      //     console.log(error);
-      //   });
-      // },
 
       signOutAcc: () => {
         clearInterval(timeID);
@@ -299,7 +81,6 @@ const App = (props) => {
       Radar.startTrackingResponsive();
       console.log('Started Tracking');
     }
-    //console.log(user);
     if (initializingUser) {setInitializingUser(false);}
   }
 
@@ -319,14 +100,9 @@ const App = (props) => {
     });
   }, [])
 
-  // Radar.on('location', (result) => {
-  //   console.log('location', result.user);
-  // });
-
   let clientLocation = null;
 
   Radar.on('clientLocation', (result) => {
-    // console.log('EVENTS', result.location);
     clientLocation = {
       latitude: result.location.latitude,
       longitude: result.location.longitude,
@@ -340,14 +116,14 @@ const App = (props) => {
       .doc(externalId)
       .get()
       .then((documentSnapshot) => {
-        //console.log('from firestore: ', documentSnapshot.data());
         LatLongRad = documentSnapshot.data();
-        //console.log('data; ', LatLongRad);
       })
       return LatLongRad;
   }
 
   function calculateDistance(clLat, clLong, rzLat, rzLong){
+    console.log()
+    console.log('-------------------------------')
     console.log('CL: ', clLat, clLong);
     console.log('RZ', rzLat, rzLong);
     function toRadians(degree) {
@@ -383,20 +159,13 @@ const App = (props) => {
       } else {
         console.log('RZ TIME:', rzTime);
         clearInterval(rzTimeID);
-        console.log(user.uid);
         firestore()
         .collection('Users')
         .doc(user.uid)
         .get()
         .then(documentSnapshot => documentSnapshot.get('rzTime'))
         .then(currentRzTime => {
-          console.log('Type of currentRzTime:', typeof (currentRzTime))
-          console.log('CurrentRzTime:', currentRzTime);
-          console.log('Type of rzTime:', typeof (rzTime))
-          console.log('RzTime:', rzTime);
           let updatedRzTime = rzTime + currentRzTime;
-          console.log('updatedRzTime', updatedRzTime);
-          console.log('Type of updatedRzTime', updatedRzTime);
           firestore()
             .collection('Users')
             .doc(user.uid)
@@ -435,29 +204,32 @@ const App = (props) => {
         tags: ['RedZone'],
         limit: 10,
       }).then((result) => {
-        // do something with result.geofences
         if (Object.keys(result.geofences).length > 0) {
             result.geofences.forEach(async (region) => {
               await getLatLongRad(region.externalId).then((result) => {
-                //console.log(result);
                 let distance = calculateDistance(clientLocation.latitude, clientLocation.longitude, result.lat, result.long);
                 console.log('Distance:', distance);
                 if (distance < result.radius) {
                   console.log('In the Red zone: DANGER')
+                  console.log('-------------------------------')
+                  console.log()
                   setDanger(true);
                   setSafe(false);
                   setWarning(false);
                 } else if (distance > result.radius){
                   console.log('Near red zone: Warning')
+                  console.log('-------------------------------')
+                  console.log()
                   setWarning(true);
                   setSafe(false);
                   setDanger(false);
-                  // LocalNotification('You are near a red zone, be careful!', 'Corona-Card Alert', 'Warning: You Are Near A Red Zone', 'YOU ARE NEAR A RED ZONE')
                 }
               });
             })
         } else {
             console.log('Not near red zone: Safe')
+            console.log('-------------------------------')
+            console.log()
             setSafe(true);
             setWarning(false);
             setDanger(false);

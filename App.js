@@ -154,7 +154,7 @@ const App = () => {
       console.log('Timer started');
       rzTimeID = setInterval(() => {
         rzTime += 1;
-      }, 1000)
+      }, 60000)
       LocalNotification('You are in a red zone, be careful!', 'Corona-Card Alert', 'Danger: You Are In A Red Zone', 'YOU ARE IN A RED ZONE')
       } else {
         console.log('RZ TIME:', rzTime);
@@ -165,7 +165,7 @@ const App = () => {
         .get()
         .then(documentSnapshot => documentSnapshot.get('rzTime'))
         .then(currentRzTime => {
-          let updatedRzTime = rzTime + currentRzTime;
+          let updatedRzTime = (rzTime / 60 ) + currentRzTime;
           firestore()
             .collection('Users')
             .doc(user.uid)
@@ -196,7 +196,7 @@ const App = () => {
     }
   }, [warning])
 
-  if (initializingUser) {return <Splash text="Loading User"/>;}
+  if (true) {return <Splash text="Loading User"/>;}
   if (!flag) {
     timeID = setInterval( () => {
       Radar.searchGeofences({

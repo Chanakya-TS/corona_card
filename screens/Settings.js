@@ -5,6 +5,7 @@ import {
     Text,
     StyleSheet,
     Button,
+    TouchableOpacity
 } from "react-native";
 
 // Import Auth context
@@ -14,17 +15,13 @@ const Settings = ({ navigation }) => {
     const { signOutAcc } = React.useContext(AuthContext);
     return(
         <View style={styles.container}>
-            <Text>Settings</Text>
-            <Button 
-                title="Open Drawer" 
-                onPress={()=>
-                    navigation.toggleDrawer()}
-            />
-            <Button 
-                title="Sign Out" 
-                onPress={()=>
-                    signOutAcc()}
-            />
+          <TouchableOpacity onPress={() =>(
+          signOutAcc())
+                }>
+            <View style={styles.mapViewBut}>
+              <Text style={styles.mapViewButText}>SIGN OUT</Text>
+            </View>
+          </TouchableOpacity>
         </View>
     )
 }
@@ -35,5 +32,21 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+        backgroundColor: 'white'
+    },
+      mapViewBut: {
+        alignSelf: 'center',
+        marginVertical: 10,
+        backgroundColor: '#36ABFF',
+        width: 200,
+        borderRadius: 20,
+        alignContent: 'center',
+        justifyContent: 'center'
+      },
+      mapViewButText: {
+        alignSelf: 'center',
+        fontSize: 24,
+        fontFamily: 'Spartan-SemiBold',
+        color: 'white',
+      }
 });

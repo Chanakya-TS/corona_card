@@ -13,6 +13,10 @@ import Home from '../screens/Home.js';
 import Map from '../screens/Map.js';
 import Settings from '../screens/Settings.js';
 
+// Import custom header
+import Header from './Header';
+import { Dimensions } from 'react-native';
+
 // Create navigators
 const Tabs = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
@@ -47,7 +51,7 @@ export const RootStackScreen = ({ userToken }) => {
   }
   
   const AuthStackScreen = () => (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator headerMode="none">
       <AuthStack.Screen
         name="SignIn"
         component={SignIn}
@@ -70,17 +74,47 @@ export const RootStackScreen = ({ userToken }) => {
   )
   
   const HomeStackScreen = () => (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#36ABFF',
+        },
+      }}
+    >
       <HomeStack.Screen
         name="Home"
         component={Home}
+        options={() => {
+          return  {
+          headerTitle: () => (
+          <Header 
+            title='HOME' 
+          />
+        )
+        , 
+        headerTitleAlign: 'center', 
+        height: '100%', 
+        width: '100%'
+        }}
+        }
       />
       <HomeStack.Screen
         name="Map"
         component={Map}
-        options={({ route }) => ({
-          title: route.params.name,
-        })}
+        options={() => {
+          return  {
+          headerTitle: () => (
+          <Header 
+            title='MAP VIEW' 
+          />
+        )
+        , 
+        headerTitleAlign: 'center', 
+        height: '100%', 
+        width: '100%'
+        }}
+        }
       />
     </HomeStack.Navigator>
   )
@@ -95,15 +129,39 @@ export const RootStackScreen = ({ userToken }) => {
   )
   
   const ProfileStackScreen = () => (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator
+    screenOptions={{
+        headerStyle: {
+          backgroundColor: '#36ABFF',
+        },
+      }}>
       <ProfileStack.Screen
         name="Profile"
         component={Profile}
+        options={() => {
+          return  {
+          headerTitle: () => (
+          <Header 
+            title='CORONA CARD' 
+          />
+        )
+        , 
+        headerTitleAlign: 'center', 
+        height: '100%', 
+        width: '100%'
+        }}
+        }
       />
     </ProfileStack.Navigator>
   )
   const TabsScreen = () => (
-    <Tabs.Navigator>
+    <Tabs.Navigator
+      tabBarOptions={{
+        tabStyle: {
+          justifyContent: 'center',
+        }
+      }}
+    >
         <Tabs.Screen
           name="Home"
           component={HomeStackScreen}

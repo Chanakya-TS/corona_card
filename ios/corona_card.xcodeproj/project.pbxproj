@@ -16,6 +16,15 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* corona_cardTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* corona_cardTests.m */; };
+		B4DE6F0CC7E2432697206446 /* Spartan-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5E2BF125FF14BA08CD1B60D /* Spartan-Black.ttf */; };
+		D292C2809D0E49F7B976BECF /* Spartan-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1E4870F22B14610BF12B4BF /* Spartan-Bold.ttf */; };
+		FE38C9F5826442998CC81CD4 /* Spartan-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 14B1C1372BDF40AC8ED1E266 /* Spartan-ExtraBold.ttf */; };
+		5053D1C6EF0C4B4FB6798656 /* Spartan-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA830220EB8F4CC187A91FAD /* Spartan-ExtraLight.ttf */; };
+		C21E858A52544AE2BB4808E0 /* Spartan-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC347504BE4E54BA5A1D9B /* Spartan-Light.ttf */; };
+		1B0C9220466C46FEAEE716D3 /* Spartan-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8DB80FBCBE9742FA954BD06B /* Spartan-Medium.ttf */; };
+		7A0F77BCF6DE48A08B47EEE6 /* Spartan-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A4D01E39D0943FB93F46399 /* Spartan-Regular.ttf */; };
+		62D438C2F57A4BE3912EFCB1 /* Spartan-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11E67B32C4D54F79B44EDB86 /* Spartan-SemiBold.ttf */; };
+		E0D3425CD2DC4AD9B20D3B95 /* Spartan-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 32CCBD2266F2464590E15FC9 /* Spartan-Thin.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +60,15 @@
 		2D02E4901E0B4A5D006451C7 /* corona_card-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "corona_card-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		D5E2BF125FF14BA08CD1B60D /* Spartan-Black.ttf */ = {isa = PBXFileReference; name = "Spartan-Black.ttf"; path = "../resources/fonts/Spartan-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B1E4870F22B14610BF12B4BF /* Spartan-Bold.ttf */ = {isa = PBXFileReference; name = "Spartan-Bold.ttf"; path = "../resources/fonts/Spartan-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		14B1C1372BDF40AC8ED1E266 /* Spartan-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Spartan-ExtraBold.ttf"; path = "../resources/fonts/Spartan-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DA830220EB8F4CC187A91FAD /* Spartan-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Spartan-ExtraLight.ttf"; path = "../resources/fonts/Spartan-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5AFC347504BE4E54BA5A1D9B /* Spartan-Light.ttf */ = {isa = PBXFileReference; name = "Spartan-Light.ttf"; path = "../resources/fonts/Spartan-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8DB80FBCBE9742FA954BD06B /* Spartan-Medium.ttf */ = {isa = PBXFileReference; name = "Spartan-Medium.ttf"; path = "../resources/fonts/Spartan-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1A4D01E39D0943FB93F46399 /* Spartan-Regular.ttf */ = {isa = PBXFileReference; name = "Spartan-Regular.ttf"; path = "../resources/fonts/Spartan-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		11E67B32C4D54F79B44EDB86 /* Spartan-SemiBold.ttf */ = {isa = PBXFileReference; name = "Spartan-SemiBold.ttf"; path = "../resources/fonts/Spartan-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		32CCBD2266F2464590E15FC9 /* Spartan-Thin.ttf */ = {isa = PBXFileReference; name = "Spartan-Thin.ttf"; path = "../resources/fonts/Spartan-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +158,7 @@
 				00E356EF1AD99517003FC87E /* corona_cardTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				45433E2B21524DFCA7527D51 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -156,6 +175,23 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		45433E2B21524DFCA7527D51 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				D5E2BF125FF14BA08CD1B60D /* Spartan-Black.ttf */,
+				B1E4870F22B14610BF12B4BF /* Spartan-Bold.ttf */,
+				14B1C1372BDF40AC8ED1E266 /* Spartan-ExtraBold.ttf */,
+				DA830220EB8F4CC187A91FAD /* Spartan-ExtraLight.ttf */,
+				5AFC347504BE4E54BA5A1D9B /* Spartan-Light.ttf */,
+				8DB80FBCBE9742FA954BD06B /* Spartan-Medium.ttf */,
+				1A4D01E39D0943FB93F46399 /* Spartan-Regular.ttf */,
+				11E67B32C4D54F79B44EDB86 /* Spartan-SemiBold.ttf */,
+				32CCBD2266F2464590E15FC9 /* Spartan-Thin.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -295,6 +331,15 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				B4DE6F0CC7E2432697206446 /* Spartan-Black.ttf in Resources */,
+				D292C2809D0E49F7B976BECF /* Spartan-Bold.ttf in Resources */,
+				FE38C9F5826442998CC81CD4 /* Spartan-ExtraBold.ttf in Resources */,
+				5053D1C6EF0C4B4FB6798656 /* Spartan-ExtraLight.ttf in Resources */,
+				C21E858A52544AE2BB4808E0 /* Spartan-Light.ttf in Resources */,
+				1B0C9220466C46FEAEE716D3 /* Spartan-Medium.ttf in Resources */,
+				7A0F77BCF6DE48A08B47EEE6 /* Spartan-Regular.ttf in Resources */,
+				62D438C2F57A4BE3912EFCB1 /* Spartan-SemiBold.ttf in Resources */,
+				E0D3425CD2DC4AD9B20D3B95 /* Spartan-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,16 +1,23 @@
-/* eslint-disable prettier/prettier */
+// Import React core components
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+
+// Import MapView to display Map
 import MapView, {Marker} from 'react-native-maps';
 
+// Import Firestore to get data about regions
 import firestore from '@react-native-firebase/firestore';
 
+// Import Component to display red zones
 import DisplayRZ from '../component/DisplayRZ';
 
+// Import Radar to get use location
 import Radar from 'react-native-radar';
 
+// Declare universal variables
 let regions = null;
-  const Map = () => {
+
+const Map = () => {
   const [gettingRegions, setGettingRegions] = useState(true);
   const [error, setError] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
@@ -21,6 +28,7 @@ let regions = null;
     longitudeDelta: 0.005,
   });
 
+  // Gets clients location and updates it once in the map
   function updateLocationAndRegion() {
     Radar.getLocation().then(({location}) => {
       setUserLocation(location);
@@ -36,27 +44,29 @@ let regions = null;
     });
   }
 
+  // Call updateLocation once
   useEffect(() => {
       updateLocationAndRegion();
   }, []);
 
 
+  // Gets regions from the Firestore
   const getRegions = () => {
+    console.log('Getting regions data from the firestore')
     firestore()
       .collection('regions')
       .get()
       .then(querySnapshot => {
-        console.log('Total regions: ', querySnapshot.size);
         const rz = [];
         querySnapshot.forEach(documentSnapshot => {
           rz.push({...documentSnapshot.data(), id: documentSnapshot.id});
         });
         regions = rz;
-        console.log(regions);
         setGettingRegions(false);
       });
   };
 
+  // Calls getRegions once
   useEffect(() => getRegions(), []);
 
   if (!error) {
@@ -64,20 +74,17 @@ let regions = null;
       if (userLocation) {
         return (
         <MapView style={styles.map} region={mapRegion}>
-        <Marker
-          coordinate={
-            {
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
+          <Marker
+            coordinate={
+              {
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude,
+              }
             }
-          }
-          title="Your Location"
-        />
-        <DisplayRZ regions={regions}/>
+            title="Your Location"
+          />
+          <DisplayRZ regions={regions}/>
         </MapView>
-        // <View>
-        //   <Text>{JSON.stringify(userLocation)}</Text>
-        // </View>
         );
       } else {
         return (
@@ -90,9 +97,6 @@ let regions = null;
               longitudeDelta: 0.005,
             }}
           />
-        // {/* <View>
-        //   <Text>LOADING</Text>
-        // </View> */}
         );
       }
   } else {
@@ -110,6 +114,7 @@ let regions = null;
     );
   }
 };
+
 export default Map;
 
 const styles = StyleSheet.create({

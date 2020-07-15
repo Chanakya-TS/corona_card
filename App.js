@@ -45,7 +45,6 @@ const App = () => {
   const [danger, setDanger] = useState(false);
   const [warning, setWarning] = useState(false);
   const [safe, setSafe] = useState(true);
-  const [isNewUser, setIsNewUser] = useState(false);
 
   // Declare methods for Firebase Auth
   const authContext = useMemo(() => {
@@ -70,7 +69,7 @@ const App = () => {
         clearInterval(timeID);
         console.log('Stopped warning')
         Radar.stopTracking();
-        console.log('Stopped Tracking')
+        console.log('Stopped tracking');
         setUser(null);
         auth()
           .signOut()
@@ -276,15 +275,13 @@ const App = () => {
     }, 5000);
   }
   return (
-    <UserContext.Provider value={{user: user, isNewUser: isNewUser}}>
       <AuthContext.Provider value={authContext}>
         <StateContext.Provider value={{warning: warning,safe: safe, danger: danger}}>
           <NavigationContainer>
-            <RootStackScreen userToken={user} isNewUser={isNewUser}/>
+            <RootStackScreen userToken={user}/>
           </NavigationContainer>
         </StateContext.Provider>
       </AuthContext.Provider>
-    </UserContext.Provider>
   )
 }
 export default App;

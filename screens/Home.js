@@ -1,21 +1,8 @@
-// Import React core components
-import React, {useState, useContext} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  Modal,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {View, Text, StyleSheet, Button} from 'react-native';
+import { StateContext } from '../contexts/StateContext';
 
-// Import contexts
-import {StateContext} from '../contexts/StateContext';
-import {UserContext} from '../contexts/UserContext';
-
-// Import new user form
-import NewUserForm from './NewUserForm';
+import {LocalNotification} from '../android/app/src/services/LocalPushController.js';
 
 const Home = ({navigation}) => {
 
@@ -38,8 +25,7 @@ const Home = ({navigation}) => {
       </Modal>
       <Text>Home</Text>
       <Text>
-        Safe: {JSON.stringify(safe)}, Warning: {JSON.stringify(warning)},
-        Danger: {JSON.stringify(danger)}
+        Safe: {JSON.stringify(safe)}, Warning: {JSON.stringify(warning)}, Danger: {JSON.stringify(danger)}
       </Text>
       <Button
         title="Map"

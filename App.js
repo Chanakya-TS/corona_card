@@ -11,6 +11,7 @@ import {
 
 import { AuthContext } from './contexts/AuthContext.js';
 import {StateContext} from './contexts/StateContext.js';
+import {UserContext} from './contexts/UserContext.js';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -25,6 +26,7 @@ import Map from './screens/Map.js';
 import About from './screens/About.js';
 import Settings from './screens/Settings.js';
 import Splash from './screens/Splash.js';
+import NewUser from './screens/NewUser.js';
 
 import { useState, useEffect, useMemo } from 'react';
 import auth from '@react-native-firebase/auth';
@@ -45,9 +47,10 @@ const SettingsStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
 
-const RootStackScreen = ({ userToken }) => {
-  console.log(userToken.uid);
-  Radar.setUserId(userToken.uid);
+const RootStackScreen = ({ userToken, isNewUser }) => {
+  //console.log(userToken.uid);
+  //console.log(userToken);
+  console.log
   return (
   <RootStack.Navigator headerMode="none">
     {userToken ? (
@@ -57,7 +60,7 @@ const RootStackScreen = ({ userToken }) => {
       options={{
         animationEnabled: false,
       }}
-    />
+      />
     ) : (
     <RootStack.Screen
       name="Auth"
@@ -105,6 +108,10 @@ const HomeStackScreen = () => (
       name="Home"
       component={Home}
     />
+    <HomeStack.Screen 
+      name="NewUser"
+      component={NewUser}
+    />
     <HomeStack.Screen
       name="Map"
       component={Map}
@@ -147,6 +154,8 @@ const TabsScreen = () => (
 
 let timeID = null;
 let flag = false;
+let rzTimeID = null;
+let rzTime = 0;
 const App = (props) => {
   // to simulate loading and logging in
   // const [isLoading, setIsLoading] = React.useState(true);
@@ -184,6 +193,7 @@ const App = (props) => {
   const [danger, setDanger] = useState(false);
   const [warning, setWarning] = useState(false);
   const [safe, setSafe] = useState(true);
+  const [isNewUser, setIsNewUser] = useState(false);
 
   const authContext = useMemo(() => {
     return {
@@ -197,7 +207,12 @@ const App = (props) => {
         const { idToken, accessToken  } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken, accessToken);
         return auth().signInWithCredential(googleCredential).then((userInfo) =>{
-          console.log(userInfo)
+          console.log('User signed in with Gmail')
+          //console.log(userInfo.additionalUserInfo);
+          if (userInfo.additionalUserInfo.isNewUser) {
+            console.log("User is new!")
+            setIsNewUser(true);
+          }
         }).catch;
       },
 
@@ -269,7 +284,7 @@ const App = (props) => {
         clearInterval(timeID);
         console.log('Stopped warning')
         Radar.stopTracking();
-        console.log('Stopped tracking');
+        console.log('Stopped Tracking')
         setUser(null);
         auth()
           .signOut()
@@ -283,8 +298,8 @@ const App = (props) => {
     if (user) {
       Radar.startTrackingResponsive();
       console.log('Started Tracking');
-      console.log(user);
     }
+    //console.log(user);
     if (initializingUser) {setInitializingUser(false);}
   }
 
@@ -325,9 +340,9 @@ const App = (props) => {
       .doc(externalId)
       .get()
       .then((documentSnapshot) => {
-        console.log('from firestore: ', documentSnapshot.data());
+        //console.log('from firestore: ', documentSnapshot.data());
         LatLongRad = documentSnapshot.data();
-        console.log('data; ', LatLongRad);
+        //console.log('data; ', LatLongRad);
       })
       return LatLongRad;
   }
@@ -358,8 +373,51 @@ const App = (props) => {
   }
 
   useEffect(() => {
-    if (danger) {
-    LocalNotification('You are in a red zone, be careful!', 'Corona-Card Alert', 'Danger: You Are In A Red Zone', 'YOU ARE IN A RED ZONE')
+    if (user) {
+      if (danger) {
+      console.log('Timer started');
+      rzTimeID = setInterval(() => {
+        rzTime += 1;
+      }, 1000)
+      LocalNotification('You are in a red zone, be careful!', 'Corona-Card Alert', 'Danger: You Are In A Red Zone', 'YOU ARE IN A RED ZONE')
+      } else {
+        console.log('RZ TIME:', rzTime);
+        clearInterval(rzTimeID);
+        console.log(user.uid);
+        firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .get()
+        .then(documentSnapshot => documentSnapshot.get('rzTime'))
+        .then(currentRzTime => {
+          console.log('Type of currentRzTime:', typeof (currentRzTime))
+          console.log('CurrentRzTime:', currentRzTime);
+          console.log('Type of rzTime:', typeof (rzTime))
+          console.log('RzTime:', rzTime);
+          let updatedRzTime = rzTime + currentRzTime;
+          console.log('updatedRzTime', updatedRzTime);
+          console.log('Type of updatedRzTime', updatedRzTime);
+          firestore()
+            .collection('Users')
+            .doc(user.uid)
+            .update({
+              rzTime: updatedRzTime,
+            })
+            .then(() => {
+              firestore()
+                .collection('Users')
+                .doc(user.uid)
+                .get()
+                .then(documentSnapshot => documentSnapshot.get('rzTime'))
+                .then(currentRzTime => {
+                  console.log('Updated Rz Time:', currentRzTime)
+                })
+            })
+            .then(() => {
+              rzTime = 0;
+            })
+        })
+      }
     }
   }, [danger])
 
@@ -381,7 +439,7 @@ const App = (props) => {
         if (Object.keys(result.geofences).length > 0) {
             result.geofences.forEach(async (region) => {
               await getLatLongRad(region.externalId).then((result) => {
-                console.log(result);
+                //console.log(result);
                 let distance = calculateDistance(clientLocation.latitude, clientLocation.longitude, result.lat, result.long);
                 console.log('Distance:', distance);
                 if (distance < result.radius) {
@@ -412,13 +470,15 @@ const App = (props) => {
   }
 
   return (
+    <UserContext.Provider value={{user: user, isNewUser: isNewUser}}>
       <AuthContext.Provider value={authContext}>
         <StateContext.Provider value={{warning: warning,safe: safe, danger: danger}}>
           <NavigationContainer>
-            <RootStackScreen userToken={user}/>
+            <RootStackScreen userToken={user} isNewUser={isNewUser}/>
           </NavigationContainer>
         </StateContext.Provider>
       </AuthContext.Provider>
+    </UserContext.Provider>
   )
 }
 export default App;

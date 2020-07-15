@@ -1,0 +1,47 @@
+[33mcommit e7afcd35c28477b0f15806bab795cc9a94b51936[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Wed Jul 15 14:07:49 2020 +0530
+
+    merged
+
+[33mcommit 602dadaaba4098a4b81b19f169ff70141e6fe6ef[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Wed Jul 15 13:59:38 2020 +0530
+
+    location not working
+
+[33mcommit 23580718fa815c27201f1fb20ed81462c41a6789[m[33m ([m[1;32mcleanUp[m[33m)[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Wed Jul 15 12:29:13 2020 +0530
+
+    all functions implemented
+
+[33mcommit 887a39fc49cb1792dd858853b3cfdcf2f73867b8[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Wed Jul 15 01:53:27 2020 +0530
+
+    Push notifications implemented
+
+[33mcommit 2ce099edebb76beb274cff1f9c2e16f7315fd6fd[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Wed Jul 15 00:17:00 2020 +0530
+
+    Geofencing and displaying RZ implemented
+
+[33mcommit 98b1bd8d6f548e7dc021d45716f94f2693d73d3a[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Mon Jul 13 22:44:27 2020 +0530
+
+    Radar display location implemented
+
+[33mcommit cfe4409ca5310dab6343733befc01b7da3020f57[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Mon Jul 13 16:08:59 2020 +0530
+
+    facebook login failed, user location and map display done
+
+[33mcommit 1dfb0fddc8f1c9157468bddfef0b3c9559272ca2[m
+Author: chanakya <chanakyats@gmail.com>
+Date:   Mon Jul 6 20:36:48 2020 +0530
+
+    GOOGLE, ANON, EMAIL AND PASSWORD SIGN IN DONE w/ navigation

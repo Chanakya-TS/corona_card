@@ -1,8 +1,4 @@
-/* eslint-disable quotes */
-/* eslint-disable no-unused-vars */
-/* eslint-disable keyword-spacing */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable prettier/prettier */
+// Import React core components
 import React from "react";
 import { 
     View,
@@ -11,10 +7,13 @@ import {
     Button,
 } from "react-native";
 
+// Import Auth context
 import { AuthContext } from '../contexts/AuthContext';
 
 const Settings = ({ navigation }) => {
+
     const { signOutAcc } = React.useContext(AuthContext);
+    
     return(
         <View style={styles.container}>
             <Text>Settings</Text>

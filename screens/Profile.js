@@ -1,3 +1,4 @@
+// Import React core components
 import React from "react";
 import { 
     View,

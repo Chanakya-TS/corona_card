@@ -1,10 +1,12 @@
-/* eslint-disable prettier/prettier */
+// Import React core components
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
+
+// Import Circle to display RZ
 import {Circle} from 'react-native-maps';
 
 const DisplayRZ = ({regions}) => {
-  console.log(regions);
+
   return (
     regions.map((region) => (
       <Circle
@@ -19,7 +21,9 @@ const DisplayRZ = ({regions}) => {
       />
     ))
   );
+  
 };
+
 export default DisplayRZ;
 
 const styles = StyleSheet.create({
